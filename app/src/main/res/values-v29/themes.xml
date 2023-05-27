@@ -3,6 +3,7 @@
 
     <style name="Theme.ChatApp" parent="android:Theme.Material.Light.NoActionBar.Overscan">
         <item name="android:navigationBarColor">@color/red</item>
+        <item name="android:forceDarkAllowed">false</item>
         <item name="android:windowBackground">@color/red</item>
     </style>
 </resources>
