@@ -19,10 +19,10 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.example.chatapp.LoginViewModel
 import com.example.chatapp.data.Response
+import com.example.chatapp.ui.navigation.Screens
 import com.example.chatapp.ui.theme.LightGrey
-import com.example.chatapp.ui.theme.Red
+import com.example.chatapp.ui.theme.Yellow
 import com.example.chatapp.ui.theme.White
-import javax.inject.Inject
 
 private lateinit var viewModel: LoginViewModel
 
@@ -32,12 +32,22 @@ fun LoginScreen(navController: NavHostController?, loginViewModel: LoginViewMode
 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val loginStatus:Response? by viewModel.loginStatus.observeAsState(null)
+    val loginStatus: Response? by viewModel.loginStatus.observeAsState(null)
 
-    when(loginStatus) {
-        is Response.Loading -> {Toast.makeText(LocalContext.current, "Loading", Toast.LENGTH_SHORT).show()}
-        is Response.Error -> {Toast.makeText(LocalContext.current, "Error", Toast.LENGTH_SHORT).show()}
-        is Response.Success -> {Toast.makeText(LocalContext.current, "Success", Toast.LENGTH_SHORT).show()}
+    when (loginStatus) {
+        is Response.Loading -> {
+            Toast.makeText(LocalContext.current, "Loading", Toast.LENGTH_SHORT).show()
+        }
+        is Response.Error -> {
+            Toast.makeText(LocalContext.current, (loginStatus as Response.Error).message, Toast.LENGTH_SHORT).show()
+        }
+        is Response.Success -> {
+            LaunchedEffect(Unit) {
+                navController?.navigate(Screens.ChatScreen.route) {
+                    popUpTo(Screens.LoginScreen.route) { inclusive = true }
+                }
+            }
+        }
         null -> {}
     }
 
@@ -48,7 +58,7 @@ fun LoginScreen(navController: NavHostController?, loginViewModel: LoginViewMode
             password,
             onUsernameChanged = { username = it },
             onPasswordChanged = { password = it },
-            onClick = { viewModel.login(username, password) }
+            onClick = { viewModel.signIn(username, password) }
         )
     }
 }
@@ -65,15 +75,15 @@ private fun LoginScreenLayout(
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(Red)
+            .background(MaterialTheme.colors.primary)
     ) {
         val (LoginText, LoginCard) = createRefs()
         Text(
             text = "Welcome Back!",
-            color = White,
+            color = MaterialTheme.colors.secondary,
             style = TextStyle(
                 fontSize = 50.sp,
-                fontWeight = FontWeight(200)
+                fontWeight = FontWeight(400)
             ),
             modifier = Modifier
                 .padding(20.dp)
@@ -105,7 +115,7 @@ private fun LoginCard(
         modifier = modifier
             .fillMaxHeight(0.70f)
             .fillMaxWidth(),
-        backgroundColor = White,
+        backgroundColor = MaterialTheme.colors.background,
         shape = RoundedCornerShape(topEnd = 50.dp, topStart = 50.dp),
         elevation = 20.dp
     ) {
@@ -138,7 +148,7 @@ private fun LoginCard(
                     withStyle(style = SpanStyle(color = Color.Gray)) {
                         append("Dont have an account?, ")
                     }
-                    withStyle(style = SpanStyle(color = Red)) {
+                    withStyle(style = SpanStyle(color = Yellow)) {
                         append("sign up now!")
                     }
                 },
@@ -160,16 +170,16 @@ private fun LoginTextField(placeholder: String, text: String, onValueChanged: (S
         placeholder = { Text(text = placeholder) },
         modifier = Modifier
             .fillMaxWidth(),
-        textStyle = TextStyle(fontWeight = FontWeight(450), color = Color.Black),
+        textStyle = TextStyle(fontWeight = FontWeight(450), color = MaterialTheme.colors.onBackground),
         singleLine = true,
         onValueChange = { text: String -> onValueChanged(text) },
         colors = TextFieldDefaults.textFieldColors(
-            cursorColor = Red,
-            backgroundColor = LightGrey,
+            cursorColor = Yellow,
+            backgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.1f),
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            placeholderColor = Color.Gray,
-            textColor = Color.Black
+            placeholderColor = MaterialTheme.colors.onBackground.copy(alpha = 0.3f),
+            textColor = MaterialTheme.colors.onBackground
         )
     )
 }
@@ -182,7 +192,7 @@ private fun LoginButton(placeholder: String, onClick: () -> Unit = {}) {
             .fillMaxWidth()
             .height(50.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Red,
+            backgroundColor = Yellow,
             contentColor = White
         ),
     ) {
