@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
@@ -11,13 +12,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,15 +27,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.chatapp.R
+import com.example.chatapp.data.models.User
 import com.example.chatapp.ui.theme.*
 
+private lateinit var viewModel: ChatViewModel
+
 @Composable
-fun ChatScreen(navController: NavHostController) {
-    ChatScreenLayout()
+fun ChatScreen(navController: NavHostController, chatViewModel: ChatViewModel) {
+    viewModel = chatViewModel
+    viewModel.getContactsList()
+    val contactsList by viewModel.contactsList.observeAsState(null)
+    ChatScreenLayout(contactsList)
 }
 
 @Composable
-private fun ChatScreenLayout() {
+private fun ChatScreenLayout(contactsList: List<User>?) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -43,28 +49,13 @@ private fun ChatScreenLayout() {
     ) {
         Column() {
             HeaderCard()
-            Spacer(modifier = Modifier.height(90.dp))
-            Image(
-                painter = painterResource(id = R.drawable.bee),
-                contentDescription = "Bzzz there's no chats",
-                alpha = if (isSystemInDarkTheme()) 0.5f else 0.9f,
-                modifier = Modifier
-                    .height(300.dp)
-                    .width(300.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-            Text(
-                text = "Bzzz there's no chats, click the button below to start a new chat",
-                color = MaterialTheme.colors.onSurface.copy(alpha = 0.3f),
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight(400),
-                    textAlign = TextAlign.Center
-                ),
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(horizontal = 80.dp)
-            )
+            contactsList?.let { contactsList ->
+                if (contactsList.isEmpty()) {
+                    NoContactsImage(Modifier.align(Alignment.CenterHorizontally))
+                } else {
+                    ContactsListLayout(contactsList)
+                }
+            }
         }
 
         FloatingActionButton(
@@ -83,6 +74,53 @@ private fun ChatScreenLayout() {
                 .padding(20.dp)
         )
     }
+}
+
+@Composable
+fun ContactsListLayout(contactsList: List<User>) {
+    LazyColumn(content = {
+        items(contactsList.size) { index ->
+            ContactCard(contactsList[index])
+        }
+    })
+}
+
+@Composable
+fun ContactCard(user: User) {
+    Text(
+        text = user.username ?: "No name",
+        style = TextStyle(
+            fontSize = 20.sp,
+            fontWeight = FontWeight(400),
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colors.onSurface
+        ),
+    )
+}
+
+
+@Composable
+private fun NoContactsImage(modifier: Modifier) {
+    Spacer(modifier = modifier.height(90.dp))
+    Image(
+        painter = painterResource(id = R.drawable.bee),
+        contentDescription = "Bzzz there's no chats",
+        alpha = if (isSystemInDarkTheme()) 0.5f else 0.9f,
+        modifier = modifier
+            .height(300.dp)
+            .width(300.dp)
+    )
+    Text(
+        text = "Bzzz there's no chats, click the button below to start a new chat",
+        color = MaterialTheme.colors.onSurface.copy(alpha = 0.3f),
+        style = TextStyle(
+            fontSize = 20.sp,
+            fontWeight = FontWeight(400),
+            textAlign = TextAlign.Center
+        ),
+        modifier = modifier
+            .padding(horizontal = 80.dp)
+    )
 }
 
 @Composable
@@ -184,5 +222,5 @@ private fun FinderTextField(
 @Preview
 @Composable
 fun ChatScreenPreview() {
-    ChatScreenLayout()
+    ChatScreenLayout(listOf())
 }

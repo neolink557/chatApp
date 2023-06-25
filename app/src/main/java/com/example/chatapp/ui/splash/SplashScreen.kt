@@ -16,12 +16,10 @@ import androidx.navigation.NavHostController
 import com.airbnb.lottie.compose.*
 import com.example.chatapp.R
 import com.example.chatapp.ui.navigation.Screens
-import com.example.chatapp.ui.theme.DarkYellow
-import com.example.chatapp.ui.theme.Yellow
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavHostController, viewModel: SplashScreenViewModel) {
+fun SplashScreen(navController: NavHostController, viewModel: SplashViewModel) {
     viewModel.checkUser()
     val loginStatus: Boolean? by viewModel.isUserLogged.observeAsState(null)
     LaunchedEffect(key1 = true) {

@@ -17,10 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
-import com.example.chatapp.LoginViewModel
 import com.example.chatapp.data.Response
 import com.example.chatapp.ui.navigation.Screens
-import com.example.chatapp.ui.theme.LightGrey
 import com.example.chatapp.ui.theme.Yellow
 import com.example.chatapp.ui.theme.White
 
