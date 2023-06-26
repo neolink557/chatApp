@@ -26,7 +26,7 @@ fun SplashScreen(navController: NavHostController, viewModel: SplashViewModel) {
         delay(3700)
         if (loginStatus == true) {
             navController.popBackStack()
-            navController.navigate(Screens.ChatScreen.route)
+            navController.navigate(Screens.HomeScreen.route)
         } else {
             navController.popBackStack()
             navController.navigate(Screens.LoginScreen.route)

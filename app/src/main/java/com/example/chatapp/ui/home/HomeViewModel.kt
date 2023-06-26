@@ -1,4 +1,4 @@
-package com.example.chatapp.ui.chat
+package com.example.chatapp.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ChatViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val getDatabaseReferenceUseCase: GetDatabaseReferenceUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase
 ) : ViewModel() {

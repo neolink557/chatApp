@@ -23,6 +23,7 @@ import com.example.chatapp.ui.theme.Yellow
 import com.example.chatapp.ui.theme.White
 
 private lateinit var viewModel: LoginViewModel
+private const val TEXT_SCALE_REDUCTION_INTERVAL = 0.9f
 
 @Composable
 fun LoginScreen(navController: NavHostController?, loginViewModel: LoginViewModel) {
@@ -41,7 +42,7 @@ fun LoginScreen(navController: NavHostController?, loginViewModel: LoginViewMode
         }
         is Response.Success -> {
             LaunchedEffect(Unit) {
-                navController?.navigate(Screens.ChatScreen.route) {
+                navController?.navigate(Screens.HomeScreen.route) {
                     popUpTo(Screens.LoginScreen.route) { inclusive = true }
                 }
             }
@@ -51,7 +52,6 @@ fun LoginScreen(navController: NavHostController?, loginViewModel: LoginViewMode
 
     navController?.let {
         LoginScreenLayout(
-            navController,
             username,
             password,
             onUsernameChanged = { username = it },
@@ -63,13 +63,13 @@ fun LoginScreen(navController: NavHostController?, loginViewModel: LoginViewMode
 
 @Composable
 private fun LoginScreenLayout(
-    navController: NavHostController,
     username: String,
     password: String,
     onUsernameChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onClick: () -> Unit
 ) {
+    var textSize by remember { mutableStateOf(50.sp) }
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -79,8 +79,9 @@ private fun LoginScreenLayout(
         Text(
             text = "Welcome Back!",
             color = MaterialTheme.colors.secondary,
+            maxLines = 2,
             style = TextStyle(
-                fontSize = 50.sp,
+                fontSize = textSize,
                 fontWeight = FontWeight(400)
             ),
             modifier = Modifier
@@ -90,7 +91,13 @@ private fun LoginScreenLayout(
                     top.linkTo(parent.top)
                     bottom.linkTo(LoginCard.top)
                     start.linkTo(parent.start)
+                },
+            onTextLayout = { textLayoutResult ->
+                val maxCurrentLineIndex: Int = textLayoutResult.lineCount - 1
+                if (textLayoutResult.isLineEllipsized(maxCurrentLineIndex)) {
+                    textSize = textSize.times(TEXT_SCALE_REDUCTION_INTERVAL)
                 }
+            }
         )
         LoginCard(Modifier.constrainAs(LoginCard) {
             start.linkTo(parent.start)

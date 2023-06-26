@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ChatApp</string>
+    <string name="NoChatsWording">"Bzzz there's no chats, click the button below to start a new chat"</string>
+    <string name="NoContactsWording">Bzzz you don\'t have contacts yet</string>
 </resources>

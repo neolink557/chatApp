@@ -5,9 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.chatapp.ui.login.LoginViewModel
 import com.example.chatapp.ui.chat.ChatScreen
-import com.example.chatapp.ui.chat.ChatViewModel
+import com.example.chatapp.ui.login.LoginViewModel
+import com.example.chatapp.ui.home.HomeScreen
+import com.example.chatapp.ui.home.HomeViewModel
 import com.example.chatapp.ui.login.LoginScreen
 import com.example.chatapp.ui.splash.SplashScreen
 import com.example.chatapp.ui.splash.SplashViewModel
@@ -23,8 +24,11 @@ fun AppNavigation(viewModels: Map<String, ViewModel>) {
         composable(Screens.LoginScreen.route) {
             LoginScreen(navController = navController, viewModels[Screens.LoginScreen.route] as LoginViewModel)
         }
+        composable(Screens.HomeScreen.route) {
+            HomeScreen(navController = navController, viewModels[Screens.HomeScreen.route] as HomeViewModel)
+        }
         composable(Screens.ChatScreen.route) {
-            ChatScreen(navController = navController, viewModels[Screens.ChatScreen.route] as ChatViewModel)
+            ChatScreen(navController = navController)
         }
     }
 }
