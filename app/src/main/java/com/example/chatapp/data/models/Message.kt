@@ -4,7 +4,6 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class User(
-    var userId: String? = null,
-    var username: String? = null
+data class Message(
+    var message: MessageData? = null
 ) : Parcelable

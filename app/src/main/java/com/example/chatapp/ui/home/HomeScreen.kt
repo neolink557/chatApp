@@ -159,7 +159,7 @@ private fun ContactCard(navController: NavHostController,user: User) {
                     color = Color.LightGray
                 ),
                 onClick = {
-                    navController.navigate(Screens.ChatScreen.route)
+                    navController.navigate(Screens.ChatScreen.createRoute(user.userId, user.username))
                 }
             )
             .fillMaxWidth()

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
+import com.example.chatapp.ui.chat.ChatViewModel
 import com.example.chatapp.ui.home.HomeViewModel
 import com.example.chatapp.ui.login.LoginViewModel
 import com.example.chatapp.ui.navigation.AppNavigation
@@ -23,6 +24,7 @@ class MainActivity : ComponentActivity() {
     private val loginViewModel: LoginViewModel by viewModels()
     private val splashViewModel: SplashViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
+    private val chatViewModel: ChatViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +46,7 @@ class MainActivity : ComponentActivity() {
         vmDictionary[Screens.LoginScreen.route] = loginViewModel
         vmDictionary[Screens.SplashScreen.route] = splashViewModel
         vmDictionary[Screens.HomeScreen.route] = homeViewModel
+        vmDictionary[Screens.ChatScreen.route] = chatViewModel
         return vmDictionary
     }
 }

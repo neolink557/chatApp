@@ -3,6 +3,7 @@ package com.example.chatapp.core
 import com.example.chatapp.data.repositories.remoteRepository.RemoteRepository
 import com.example.chatapp.data.repositories.remoteRepository.RemoteRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,7 +21,13 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRepository(firebaseAuth: FirebaseAuth): RemoteRepository {
-        return RemoteRepositoryImpl(firebaseAuth)
+    fun provideFirebaseDatabase(): FirebaseDatabase {
+        return FirebaseDatabase.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRepository(firebaseAuth: FirebaseAuth,firebaseDatabase: FirebaseDatabase): RemoteRepository {
+        return RemoteRepositoryImpl(firebaseAuth,firebaseDatabase)
     }
 }

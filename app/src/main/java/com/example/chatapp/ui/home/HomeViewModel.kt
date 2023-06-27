@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.chatapp.data.models.User
 import com.example.chatapp.domain.GetCurrentUserUseCase
 import com.example.chatapp.domain.GetDatabaseReferenceUseCase
+import com.example.chatapp.utils.USERS_PATHSTRING
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -25,7 +26,7 @@ class HomeViewModel @Inject constructor(
     val errorMessage: LiveData<String> = _errorMessage
 
     fun getContactsList() {
-        val reference = getDatabaseReferenceUseCase("users")
+        val reference = getDatabaseReferenceUseCase(USERS_PATHSTRING)
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val uid = getCurrentUserUseCase()?.uid
